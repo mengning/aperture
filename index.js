@@ -12,8 +12,8 @@ const electronUtil = require('electron-util/node');
 //const debuglog = util.debuglog('aperture');
 
 // Workaround for https://github.com/electron/electron/issues/9459
-const BIN = path.join(electronUtil.fixPathForAsarUnpack(__dirname), 'aperture');
-//const BIN = electronUtil.fixPathForAsarUnpack(ffmpeg.path);
+//const BIN = path.join(electronUtil.fixPathForAsarUnpack(__dirname), 'aperture');
+const BIN = electronUtil.fixPathForAsarUnpack(ffmpeg.path);
 /*
 const supportsHevcHardwareEncoding = (() => {
   if (!macosVersion.isGreaterThanOrEqualTo('10.13')) {

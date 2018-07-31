@@ -1,20 +1,18 @@
 {
   "name": "aperture",
   "version": "5.0.0",
-  "description": "Record the screen on macOS",
+  "description": "Record the screen on Windows",
   "license": "MIT",
-  "repository": "wulkano/aperture",
+  "repository": "mengning/aperture",
   "engines": {
     "node": ">=8"
   },
   "scripts": {
     "test": "xo && ava",
-    "build": "cd swift && xcodebuild archive -derivedDataPath $(mktemp -d) -scheme aperture",
     "prepublish": "npm run build"
   },
   "files": [
-    "index.js",
-    "aperture"
+    "index.js"
   ],
   "dependencies": {
     "electron-util": "^0.9.0",
