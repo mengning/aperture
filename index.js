@@ -1,18 +1,20 @@
 'use strict';
 const os = require('os');
-const util = require('util');
+//const util = require('util');
 const path = require('path');
 const execa = require('execa');
 const tempy = require('tempy');
-const macosVersion = require('macos-version');
+const ffmpeg = require('@ffmpeg-installer/ffmpeg');
+//const macosVersion = require('macos-version');
 const fileUrl = require('file-url');
 const electronUtil = require('electron-util/node');
 
-const debuglog = util.debuglog('aperture');
+//const debuglog = util.debuglog('aperture');
 
 // Workaround for https://github.com/electron/electron/issues/9459
 const BIN = path.join(electronUtil.fixPathForAsarUnpack(__dirname), 'aperture');
-
+//const BIN = electronUtil.fixPathForAsarUnpack(ffmpeg.path);
+/*
 const supportsHevcHardwareEncoding = (() => {
   if (!macosVersion.isGreaterThanOrEqualTo('10.13')) {
     return false;
@@ -25,10 +27,10 @@ const supportsHevcHardwareEncoding = (() => {
   // Intel Core generation 6 or higher supports HEVC hardware encoding
   return result && Number(result[1]) >= 6;
 })();
-
+*/
 class Aperture {
   constructor() {
-    macosVersion.assertGreaterThanOrEqualTo('10.12');
+    //macosVersion.assertGreaterThanOrEqualTo('10.12');
   }
 
   startRecording({
@@ -81,16 +83,16 @@ class Aperture {
       if (videoCodec) {
         const codecMap = new Map([
           ['h264', 'avc1'],
-          ['hevc', 'hvc1'],
+          //['hevc', 'hvc1'],
           ['proRes422', 'apcn'],
           ['proRes4444', 'ap4h']
         ]);
-
+/*
         if (!supportsHevcHardwareEncoding) {
           codecMap.delete('hevc');
         }
 
-        if (!codecMap.has(videoCodec)) {
+*/        if (!codecMap.has(videoCodec)) {
           throw new Error(`Unsupported video codec specified: ${videoCodec}`);
         }
 
@@ -120,7 +122,7 @@ class Aperture {
 
       this.recorder.stdout.setEncoding('utf8');
       this.recorder.stdout.on('data', data => {
-        debuglog(data);
+        //debuglog(data);
 
         if (data.trim() === 'R') {
           // `R` is printed by Swift when the recording **actually** starts
@@ -170,15 +172,15 @@ Object.defineProperty(module.exports, 'videoCodecs', {
   get() {
     const codecs = new Map([
       ['h264', 'H264'],
-      ['hevc', 'HEVC'],
+      //['hevc', 'HEVC'],
       ['proRes422', 'Apple ProRes 422'],
       ['proRes4444', 'Apple ProRes 4444']
     ]);
-
+/*
     if (!supportsHevcHardwareEncoding) {
       codecs.delete('hevc');
     }
-
+*/
     return codecs;
   }
 });
