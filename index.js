@@ -100,7 +100,7 @@ class Aperture {
       }
 
 //      this.recorder = execa(BIN, [JSON.stringify(recorderOpts)]);
-      this.recorder = execa(BIN, ["-f gdigrab -i desktop out.mp4"]);
+      this.recorder = execa(BIN, [" -f gdigrab -i desktop "+fileUrl(this.tmpPath)]);
 
       const timeout = setTimeout(() => {
         // `.stopRecording()` was called already
