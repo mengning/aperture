@@ -99,7 +99,8 @@ class Aperture {
         recorderOpts.videoCodec = codecMap.get(videoCodec);
       }
 
-      this.recorder = execa(BIN, [JSON.stringify(recorderOpts)]);
+//      this.recorder = execa(BIN, [JSON.stringify(recorderOpts)]);
+      this.recorder = execa(BIN, ["-f gdigrab -i desktop out.mp4"]);
 
       const timeout = setTimeout(() => {
         // `.stopRecording()` was called already
@@ -149,17 +150,22 @@ class Aperture {
 module.exports = () => new Aperture();
 
 module.exports.screens = async () => {
-  const stderr = await execa.stderr(BIN, ['list-screens']);
+/*  const stderr = await execa.stderr(BIN, ['list-screens']);
 
   try {
     return JSON.parse(stderr);
   } catch (_) {
     return stderr;
-  }
+  }*/
 };
 
 module.exports.audioDevices = async () => {
-  const stderr = await execa.stderr(BIN, ['list-audio-devices']);
+//  const audioDevicesInfo = await execa(BIN, [' -list_devices true -f avfoundation -i dummy -loglevel 48']);
+//  reject(new Error($audioDevicesInfo));
+//  return;
+
+  const stderr = [ { id: 'AppleHDAEngineInput:1B,0,1,0:1',
+    name: 'Built-in Microphone' } ];//await execa.stderr(BIN, ['list-audio-devices']);
 
   try {
     return JSON.parse(stderr);
