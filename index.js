@@ -100,7 +100,8 @@ class Aperture {
       }
 
 //      this.recorder = execa(BIN, [JSON.stringify(recorderOpts)]);
-      this.recorder = execa(BIN, [" -f gdigrab -i desktop "+fileUrl(this.tmpPath)]);
+      	//this.recorder = execa.shell(BIN+" -f gdigrab -i desktop out8.mp4");
+	this.recorder = execa(BIN, ['-f', 'gdigrab', '-framerate', 6, '-i', 'desktop', 'out7.mp4']);
 
       const timeout = setTimeout(() => {
         // `.stopRecording()` was called already
@@ -120,7 +121,7 @@ class Aperture {
         delete this.recorder;
         reject(err);
       });
-
+/*
       this.recorder.stdout.setEncoding('utf8');
       this.recorder.stdout.on('data', data => {
         //debuglog(data);
@@ -131,6 +132,10 @@ class Aperture {
           resolve(this.tmpPath);
         }
       });
+*/
+          clearTimeout(timeout);
+          resolve(this.tmpPath);
+    
     });
   }
 
