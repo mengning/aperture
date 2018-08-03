@@ -1,6 +1,6 @@
 'use strict';
-//const os = require('os');
-//const util = require('util');
+//const os = require('fs');
+const stream = require('stream');
 const path = require('path');
 const execa = require('execa');
 const tempy = require('tempy');
@@ -101,8 +101,11 @@ class Aperture {
 
 //      this.recorder = execa(BIN, [JSON.stringify(recorderOpts)]);
       	//this.recorder = execa.shell(BIN+" -f gdigrab -i desktop out8.mp4");
-	this.recorder = execa(BIN, ['-f', 'gdigrab', '-framerate', 6, '-i', 'desktop', 'out7.mp4']);
+	this.recorder = execa(BIN, ['-f', 'gdigrab', '-framerate', 6, '-i', 'desktop', this.tmpPath], {
+		stdio: [null, 'inherit', 'inherit'], shell: true
+	});
 
+/*
       const timeout = setTimeout(() => {
         // `.stopRecording()` was called already
         if (this.recorder === undefined) {
@@ -121,7 +124,6 @@ class Aperture {
         delete this.recorder;
         reject(err);
       });
-/*
       this.recorder.stdout.setEncoding('utf8');
       this.recorder.stdout.on('data', data => {
         //debuglog(data);
@@ -133,7 +135,6 @@ class Aperture {
         }
       });
 */
-          clearTimeout(timeout);
           resolve(this.tmpPath);
     
     });
@@ -143,10 +144,16 @@ class Aperture {
     if (this.recorder === undefined) {
       throw new Error('Call `.startRecording()` first');
     }
-
-    this.recorder.kill();
-    await this.recorder;
-    delete this.recorder;
+    console.log('_______________________________________________');
+    //console.log(this.recorder.stdin, this.recorder.stdout, this.recorder.stderr);
+    this.recorder.stdin.write("q\n");
+     this.recorder.stdin.end();
+    console.log(this.recorder.pid);
+    process.kill(this.recorder.pid, 'SIGINT');
+    //execa('taskkill',['/im', 'ffmpeg.exe', '/t']);
+    console.log(this.recorder.killed);
+    //await this.recorder;
+    //delete this.recorder;
 
     return this.tmpPath;
   }

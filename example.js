@@ -10,9 +10,10 @@ async function main() {
   console.log('Preparing to record for 5 seconds');
   await recorder.startRecording();
   console.log('Recording started');
-  await delay(15000);
+  await delay(5000);
   const fp = await recorder.stopRecording();
-  //fs.renameSync(fp, 'recording.mp4');
+  await delay(5000);
+  fs.renameSync(fp, 'recording.mp4');
   console.log('Video saved in the current directory');
 }
 
