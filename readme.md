@@ -1,7 +1,7 @@
 <p align="center">
   <img src="https://getkap.co/images/aperture.svg" height="64">
   <h3 align="center">Aperture</h3>
-  <p align="center">Record the screen on macOS</p>
+  <p align="center">Record the screen on Windows</p>
   <p align="center"><a href="https://travis-ci.org/wulkano/aperture"><img src="https://travis-ci.org/wulkano/aperture.svg?branch=master" alt="Build Status: macOS"></a> <a href="https://github.com/sindresorhus/xo"><img src="https://img.shields.io/badge/code_style-XO-5ed9c7.svg" alt="XO code style"></a></p>
 </p>
 
@@ -11,7 +11,7 @@
 $ npm install aperture
 ```
 
-*Requires macOS 10.12 or later.*
+*Requires win7 and win10*
 
 
 ## Usage
