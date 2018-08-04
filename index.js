@@ -67,8 +67,8 @@ class Aperture {
 		'-framerate ' + fps;
       if (cropArea) {
         recorderOpts +=  ' ' +
-    		'-offset_x ' + cropRect.cropArea.x + ' ' +
-                '-offset_y ' + cropRect.cropArea.y + ' ' +
+    		'-offset_x ' + cropArea.x + ' ' +
+                '-offset_y ' + cropArea.y + ' ' +
                 '-video_size ' + cropArea.width + 'x' + cropArea.height;
       }
       recorderOpts +=  ' ' +
