@@ -62,21 +62,18 @@ class Aperture {
         }
       }
 
-      const recorderOpts = {
-        destination: this.tmpPath,
-        framesPerSecond: fps,
-        showCursor,
-        highlightClicks,
-        screenId,
-        audioDeviceId
-      };
-
+      var recorderOpts = 
+                '-f ' + 'gdigrab ' + 
+		'-framerate ' + fps;
       if (cropArea) {
-        recorderOpts.cropRect = [
-          [cropArea.x, cropArea.y],
-          [cropArea.width, cropArea.height]
-        ];
+        recorderOpts +=  ' ' +
+    		'-offset_x ' + cropRect.cropArea.x + ' ' +
+                '-offset_y ' + cropRect.cropArea.y + ' ' +
+                '-video_size ' + cropArea.width + 'x' + cropArea.height;
       }
+      recorderOpts +=  ' ' +
+	        '-i ' + 'desktop';
+
 
       if (videoCodec) {
         const codecMap = new Map([
@@ -97,10 +94,14 @@ class Aperture {
         recorderOpts.videoCodec = codecMap.get(videoCodec);
       }
 
+      recorderOpts +=  ' ' +
+	      this.tmpPath;
+      console.log(recorderOpts);
 //      this.recorder = execa(BIN, [JSON.stringify(recorderOpts)]);
       	//this.recorder = execa.shell(BIN+" -f gdigrab -i desktop out8.mp4");
-	this.recorder = execa(BIN, ['-f', 'gdigrab', '-framerate', recorderOpts.framesPerSecond, '-i', 'desktop', recorderOpts.destination], {
-		stdio: [null, 'inherit', 'inherit'], shell: true
+	this.recorder = execa(BIN, [recorderOpts], {
+		stdio: [null, 'inherit', 'inherit'], 
+		shell: true
 	});
 
 /*
