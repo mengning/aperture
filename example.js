@@ -8,7 +8,20 @@ async function main() {
   console.log('Screens:', await aperture.screens());
   console.log('Audio devices:', await aperture.audioDevices());
   console.log('Preparing to record for 5 seconds');
-  await recorder.startRecording();
+  await recorder.startRecording({
+    fps = 30,
+    cropArea = {
+        x = 30,
+        y = 30,
+        width = 500,
+        height = 500
+    },
+    showCursor = true,
+    highlightClicks = false,
+    screenId = 0,
+    audioDeviceId = undefined,
+    videoCodec = undefined
+  });
   console.log('Recording started');
   await delay(5000);
   const fp = await recorder.stopRecording();
