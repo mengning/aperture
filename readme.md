@@ -8,10 +8,10 @@
 ## Install
 
 ```
-$ npm install aperture
+$ npm install github:mengning/aperture
 ```
 
-*Requires win7 and win10*
+*Requires win7 or win10*
 
 
 ## Usage
