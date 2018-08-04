@@ -12,6 +12,7 @@ const electronUtil = require('electron-util/node');
 // Workaround for https://github.com/electron/electron/issues/9459
 //const BIN = path.join(electronUtil.fixPathForAsarUnpack(__dirname), 'aperture');
 const BIN = electronUtil.fixPathForAsarUnpack(ffmpeg.path);
+
 /*
 const supportsHevcHardwareEncoding = (() => {
   if (!macosVersion.isGreaterThanOrEqualTo('10.13')) {
@@ -32,14 +33,14 @@ class Aperture {
   }
 
   startRecording({
-    fps = 30,
-    cropArea = undefined,
-    showCursor = true,
-    highlightClicks = false,
-    screenId = 0,
-    audioDeviceId = undefined,
-    videoCodec = undefined
-  } = {}) {
+                   fps = 30,
+                   cropArea = undefined,
+                   showCursor = true,
+                   highlightClicks = false,
+                   screenId = 0,
+                   audioDeviceId = undefined,
+                   videoCodec = undefined
+                 } = {}) {
     return new Promise((resolve, reject) => {
       if (this.recorder !== undefined) {
         reject(new Error('Call `.stopRecording()` first'));
@@ -54,25 +55,25 @@ class Aperture {
 
       if (typeof cropArea === 'object') {
         if (typeof cropArea.x !== 'number' ||
-            typeof cropArea.y !== 'number' ||
-            typeof cropArea.width !== 'number' ||
-            typeof cropArea.height !== 'number') {
+          typeof cropArea.y !== 'number' ||
+          typeof cropArea.width !== 'number' ||
+          typeof cropArea.height !== 'number') {
           reject(new Error('Invalid `cropArea` option object'));
           return;
         }
       }
 
-      var recorderOpts = 
-                '-f ' + 'gdigrab ' + 
-		'-framerate ' + fps;
+      var recorderOpts =
+        '-f ' + 'gdigrab ' +
+        '-framerate ' + fps;
       if (cropArea) {
-        recorderOpts +=  ' ' +
-    		'-offset_x ' + cropArea.x + ' ' +
-                '-offset_y ' + cropArea.y + ' ' +
-                '-video_size ' + cropArea.width + 'x' + cropArea.height;
+        recorderOpts += ' ' +
+          '-offset_x ' + cropArea.x + ' ' +
+          '-offset_y ' + cropArea.y + ' ' +
+          '-video_size ' + cropArea.width + 'x' + cropArea.height;
       }
-      recorderOpts +=  ' ' +
-	        '-i ' + 'desktop';
+      recorderOpts += ' ' +
+        '-i ' + 'desktop';
 
 
       if (videoCodec) {
@@ -82,59 +83,60 @@ class Aperture {
           ['proRes422', 'apcn'],
           ['proRes4444', 'ap4h']
         ]);
-/*
-        if (!supportsHevcHardwareEncoding) {
-          codecMap.delete('hevc');
-        }
+        /*
+                if (!supportsHevcHardwareEncoding) {
+                  codecMap.delete('hevc');
+                }
 
-*/        if (!codecMap.has(videoCodec)) {
+        */
+        if (!codecMap.has(videoCodec)) {
           throw new Error(`Unsupported video codec specified: ${videoCodec}`);
         }
 
         recorderOpts.videoCodec = codecMap.get(videoCodec);
       }
 
-      recorderOpts +=  ' ' +
-	      this.tmpPath;
+      recorderOpts += ' ' +
+        this.tmpPath;
       console.log(recorderOpts);
 //      this.recorder = execa(BIN, [JSON.stringify(recorderOpts)]);
-      	//this.recorder = execa.shell(BIN+" -f gdigrab -i desktop out8.mp4");
-	this.recorder = execa(BIN, [recorderOpts], {
-		stdio: [null, 'inherit', 'inherit'], 
-		shell: true
-	});
-
-/*
-      const timeout = setTimeout(() => {
-        // `.stopRecording()` was called already
-        if (this.recorder === undefined) {
-          return;
-        }
-
-        const err = new Error('Could not start recording within 5 seconds');
-        err.code = 'RECORDER_TIMEOUT';
-        this.recorder.kill();
-        delete this.recorder;
-        reject(err);
-      }, 10000);
-
-      this.recorder.catch(err => {
-        clearTimeout(timeout);
-        delete this.recorder;
-        reject(err);
+      //this.recorder = execa.shell(BIN+" -f gdigrab -i desktop out8.mp4");
+      this.recorder = execa(BIN, [recorderOpts], {
+        stdio: [null, 'inherit', 'inherit'],
+        shell: true
       });
-      this.recorder.stdout.setEncoding('utf8');
-      this.recorder.stdout.on('data', data => {
-        //debuglog(data);
 
-        if (data.trim() === 'R') {
-          // `R` is printed by Swift when the recording **actually** starts
-          clearTimeout(timeout);
-          resolve(this.tmpPath);
-        }
-      });
-*/
-          resolve(this.tmpPath);
+      /*
+            const timeout = setTimeout(() => {
+              // `.stopRecording()` was called already
+              if (this.recorder === undefined) {
+                return;
+              }
+
+              const err = new Error('Could not start recording within 5 seconds');
+              err.code = 'RECORDER_TIMEOUT';
+              this.recorder.kill();
+              delete this.recorder;
+              reject(err);
+            }, 10000);
+
+            this.recorder.catch(err => {
+              clearTimeout(timeout);
+              delete this.recorder;
+              reject(err);
+            });
+            this.recorder.stdout.setEncoding('utf8');
+            this.recorder.stdout.on('data', data => {
+              //debuglog(data);
+
+              if (data.trim() === 'R') {
+                // `R` is printed by Swift when the recording **actually** starts
+                clearTimeout(timeout);
+                resolve(this.tmpPath);
+              }
+            });
+      */
+      resolve(this.tmpPath);
     });
   }
 
@@ -157,13 +159,13 @@ class Aperture {
 module.exports = () => new Aperture();
 
 module.exports.screens = async () => {
-/*  const stderr = await execa.stderr(BIN, ['list-screens']);
+  /*  const stderr = await execa.stderr(BIN, ['list-screens']);
 
-  try {
-    return JSON.parse(stderr);
-  } catch (_) {
-    return stderr;
-  }*/
+    try {
+      return JSON.parse(stderr);
+    } catch (_) {
+      return stderr;
+    }*/
 };
 
 module.exports.audioDevices = async () => {
@@ -171,8 +173,10 @@ module.exports.audioDevices = async () => {
 //  reject(new Error($audioDevicesInfo));
 //  return;
 
-  const stderr = [ { id: 'AppleHDAEngineInput:1B,0,1,0:1',
-    name: 'Built-in Microphone' } ];//await execa.stderr(BIN, ['list-audio-devices']);
+  const stderr = [{
+    id: 'AppleHDAEngineInput:1B,0,1,0:1',
+    name: 'Built-in Microphone'
+  }];//await execa.stderr(BIN, ['list-audio-devices']);
 
   try {
     return JSON.parse(stderr);
@@ -189,11 +193,11 @@ Object.defineProperty(module.exports, 'videoCodecs', {
       ['proRes422', 'Apple ProRes 422'],
       ['proRes4444', 'Apple ProRes 4444']
     ]);
-/*
-    if (!supportsHevcHardwareEncoding) {
-      codecs.delete('hevc');
-    }
-*/
+    /*
+        if (!supportsHevcHardwareEncoding) {
+          codecs.delete('hevc');
+        }
+    */
     return codecs;
   }
 });
